@@ -9,5 +9,6 @@ require_relative 'lib/game/pieces/bishop'
 require_relative 'lib/game/pieces/queen'
 require_relative 'lib/game/pieces/king'
 require_relative 'lib/game/board'
+require 'rainbow'
 
 Board.new.display
