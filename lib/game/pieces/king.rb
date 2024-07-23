@@ -7,4 +7,18 @@ class King < Piece
   def assign_symbol(num)
     num == 1 ? WHITE_SYMBOL : BLACK_SYMBOL
   end
+
+  def generate_moves
+    move_components = [1, 0, -1]
+    move_array = []
+    move_components.each do |row_index|
+      move_components.each do |column_index|
+        next if row_index == column_index && row_index.zero?
+
+        move_array << [row_index, column_index]
+      end
+    end
+
+    move_array
+  end
 end

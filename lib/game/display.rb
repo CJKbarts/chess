@@ -4,10 +4,12 @@ module Display
   def display
     puts
     color = :white
-    @grid.reverse.each do |row|
+    @grid.reverse.each_with_index do |row, row_index|
+      print "#{8 - row_index} "
       print_row(color, row)
       color = switch_color(color)
     end
+    print_column_letters
     puts
   end
 
@@ -16,6 +18,12 @@ module Display
       print Rainbow(" #{cell} ").bg(color)
       color = switch_color(color)
     end
+    puts
+  end
+
+  def print_column_letters
+    print '   '
+    ('a'..'h').each { |letter| print "#{letter}  " }
     puts
   end
 

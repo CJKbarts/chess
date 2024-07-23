@@ -7,4 +7,8 @@ class Rook < Piece
   def assign_symbol(num)
     num == 1 ? WHITE_SYMBOL : BLACK_SYMBOL
   end
+
+  def generate_moves
+    generate_straight_moves
+  end
 end
