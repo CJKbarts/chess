@@ -85,13 +85,13 @@ describe Board do
 
       context 'when origin is at bottom' do
         it 'returns an array of elements in the line' do
-          expect(board_diagonal.diagonal([0, 0], [4, 4])).to eql(Array.new(4, pawn))
+          expect(board_diagonal.diagonal([0, 0], [4, 4])).to eql(Array.new(3, pawn))
         end
       end
 
       context 'when origin is at top' do
         it 'returns an array of elements in the line' do
-          expect(board_diagonal.diagonal([4, 4], [0, 0])).to eql(Array.new(4, pawn))
+          expect(board_diagonal.diagonal([4, 4], [0, 0])).to eql(Array.new(3, pawn))
         end
       end
     end
@@ -110,13 +110,13 @@ describe Board do
 
       context 'when origin is at top' do
         it 'returns an array of elements in the line' do
-          expect(board_diagonal.diagonal([4, 0], [0, 4])).to eql(Array.new(4, pawn))
+          expect(board_diagonal.diagonal([4, 0], [0, 4])).to eql(Array.new(3, pawn))
         end
       end
 
       context 'when origin is at bottom' do
         it 'returns an array of elements in the line' do
-          expect(board_diagonal.diagonal([0, 4], [4, 0])).to eql(Array.new(4, pawn))
+          expect(board_diagonal.diagonal([0, 4], [4, 0])).to eql(Array.new(3, pawn))
         end
       end
     end

@@ -18,4 +18,19 @@ describe Player do
       end
     end
   end
+
+  describe '#coordinates' do
+    subject(:player_coordinate) { described_class.new(1) }
+    it 'returns coordinate equivalent of string' do
+      string = 'a4'
+      coordinates = [3, 0]
+      expect(player_coordinate.coordinates(string)).to eql(coordinates)
+    end
+
+    it 'returns coordinate equivalent of string' do
+      string = 'd1'
+      coordinates = [0, 3]
+      expect(player_coordinate.coordinates(string)).to eql(coordinates)
+    end
+  end
 end

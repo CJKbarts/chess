@@ -11,19 +11,11 @@ class Board
     populate_grid
   end
 
-  def empty?(coordinates)
-    piece(coordinates) == default_symbol
-  end
+  def valid_origin?(origin, player_num)
+    return false if origin == []
 
-  def move(origin, destination)
-    @king_taken = true if piece(destination).instance_of?(King)
-    set_piece(piece(origin), destination)
-    set_piece(default_symbol, origin)
-    piece(destination).update_position(destination)
-  end
-
-  def set_piece(value, coordinates)
-    grid[coordinates[0]][coordinates[1]] = value
+    current_piece = piece(origin)
+    !empty?(origin) && current_piece.num == player_num && current_piece.can_move?(self)
   end
 
   def piece(coordinates)
@@ -32,20 +24,15 @@ class Board
     grid[coordinates[0]][coordinates[1]]
   end
 
-  def valid_origin?(origin, player_num)
-    return false if origin == []
-
-    current_piece = piece(origin)
-    !empty?(origin) && current_piece.num == player_num && current_piece.can_move?(self)
+  def empty?(coordinates)
+    piece(coordinates) == default_symbol
   end
 
   def valid_destination?(origin, destination, player_num)
     return false if destination == []
 
-    origin_piece = piece(origin)
-    destination_piece = piece(destination)
-    origin_piece.valid_move?(destination) && clear_path?(origin, destination) &&
-      (destination_piece == default_symbol || destination_piece.num != player_num)
+    piece(origin).valid_move?(destination) && clear_path?(origin, destination) &&
+      (empty?(destination) || piece(destination).num != player_num)
   end
 
   def clear_path?(origin, destination)
@@ -77,21 +64,31 @@ class Board
   end
 
   def diagonal_clear?(origin, destination)
-    diagonal(origin, destination)[1..].all?(default_symbol)
+    diagonal(origin, destination).all?(default_symbol)
   end
 
   def diagonal(origin, destination)
-    x_increment = destination[0] <=> origin[0]
-    y_increment = destination[1] <=> origin[1]
+    x_multiplier = destination[0] <=> origin[0]
+    y_multiplier = destination[1] <=> origin[1]
     array = []
+    difference = (destination[0] - origin[0]).abs
 
-    until origin == destination
-      array << grid[origin[0]][origin[1]]
-      origin[0] += x_increment
-      origin[1] += y_increment
+    (1..(difference - 1)).each do |increment|
+      array << grid[origin[0] + (increment * x_multiplier)][origin[1] + (increment * y_multiplier)]
     end
 
     array
+  end
+
+  def move(origin, destination)
+    @king_taken = true if piece(destination).instance_of?(King)
+    set_piece(piece(origin), destination)
+    set_piece(default_symbol, origin)
+    piece(destination).update_position(destination)
+  end
+
+  def set_piece(value, coordinates)
+    grid[coordinates[0]][coordinates[1]] = value
   end
 
   private
@@ -106,11 +103,11 @@ class Board
   def populate_row(row_num, color_num)
     row = grid[row_num]
     row[0] =  Rook.new(color_num, [row_num, 0])
-    row[-1] = Rook.new(color_num, [row_num, -1])
+    row[-1] = Rook.new(color_num, [row_num, 7])
     row[1] = Knight.new(color_num, [row_num, 1])
-    row[-2] = Knight.new(color_num, [row_num, -2])
+    row[-2] = Knight.new(color_num, [row_num, 6])
     row[2] = Bishop.new(color_num, [row_num, 2])
-    row[-3] = Bishop.new(color_num, [row_num, -3])
+    row[-3] = Bishop.new(color_num, [row_num, 5])
     row[3] = Queen.new(color_num, [row_num, 3])
     row[4] = King.new(color_num, [row_num, 4])
   end
