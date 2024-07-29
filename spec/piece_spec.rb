@@ -7,24 +7,6 @@ describe Piece do
   describe '#valid_move?' do
     subject(:pawn_valid) { Pawn.new(1, [1, 0]) }
 
-    context 'when an out of bounds coordinate is given' do
-      it 'returns false' do
-        invalid_coordinate = [10, 5]
-        expect(pawn_valid.valid_move?(invalid_coordinate)).to eql(false)
-      end
-
-      context 'when the move is valid otherwise' do
-        before do
-          pawn_valid.instance_variable_set(:@position, [7, 5])
-        end
-
-        it 'returns false' do
-          invalid_coordinate = [8, 5]
-          expect(pawn_valid.valid_move?(invalid_coordinate)).to eql(false)
-        end
-      end
-    end
-
     context 'when an invalid move is given' do
       it 'returns false' do
         invalid_coordinate = [4, 0]

@@ -10,9 +10,15 @@ class Pawn < Piece
 
   def generate_moves
     increment = symbol == WHITE_SYMBOL ? 1 : -1
+    [[increment, 0], [increment * 2, 0]]
+  end
 
-    move_array = [[increment, 0]]
-    move_array.prepend([increment * 2, 0]) if position[0] == 1 || position[0] == -2
-    move_array
+  def update_position(new_position)
+    super
+    moves.pop if moves.length == 2
+  end
+
+  def adjacent_moves
+    [moves[0]]
   end
 end

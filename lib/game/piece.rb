@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Piece
-  attr_reader :symbol, :moves, :position
+  attr_reader :symbol, :moves, :position, :num
 
   def initialize(num, position)
+    @num = num
     @position = position
     @symbol = assign_symbol(num)
     @moves = generate_moves
@@ -14,8 +15,6 @@ class Piece
   end
 
   def valid_move?(coordinates)
-    return false unless coordinates.all? { |index| (0..7).include?(index) }
-
     move = []
     move << coordinates[0] - position[0]
     move << coordinates[1] - position[1]
@@ -25,7 +24,7 @@ class Piece
   def generate_diagonal_moves
     move_array = []
 
-    (0..7).each do |num|
+    (1..7).each do |num|
       move_array << [num, num]
       move_array << [-num, -num]
       move_array << [num, -num]
@@ -46,6 +45,19 @@ class Piece
     end
 
     move_array
+  end
+
+  def can_move?(board)
+    adjacent_moves.any? do |move|
+      coordinates = [position[0] + move[0], position[1] + move[1]]
+      board.empty?(coordinates) || opp_piece?(board.piece(coordinates))
+    end
+  end
+
+  def opp_piece?(piece)
+    return false if piece.nil?
+
+    num != piece.num
   end
 
   def to_s

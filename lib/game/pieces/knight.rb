@@ -22,4 +22,8 @@ class Knight < Piece
 
     move_array
   end
+
+  def adjacent_moves
+    moves
+  end
 end

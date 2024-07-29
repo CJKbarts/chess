@@ -11,4 +11,8 @@ class Rook < Piece
   def generate_moves
     generate_straight_moves
   end
+
+  def adjacent_moves
+    moves[0, 4]
+  end
 end

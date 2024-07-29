@@ -11,4 +11,8 @@ class Bishop < Piece
   def generate_moves
     generate_diagonal_moves
   end
+
+  def adjacent_moves
+    moves[0, 4]
+  end
 end

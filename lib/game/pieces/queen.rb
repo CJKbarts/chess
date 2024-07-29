@@ -11,4 +11,8 @@ class Queen < Piece
   def generate_moves
     generate_diagonal_moves + generate_straight_moves
   end
+
+  def adjacent_moves
+    moves[0, 4] + moves[28, 4]
+  end
 end
