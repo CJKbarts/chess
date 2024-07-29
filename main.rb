@@ -13,5 +13,7 @@ require_relative 'lib/game/player'
 require_relative 'lib/game'
 require 'rainbow'
 require 'pry-byebug'
+
 game = Game.new
+game.setup_player_names
 game.play_round
