@@ -4,7 +4,7 @@ class Bishop < Piece
   WHITE_SYMBOL = "\u2657"
   BLACK_SYMBOL = "\u265D"
 
-  def assign_symbol(num)
+  def assign_symbol
     num == 1 ? WHITE_SYMBOL : BLACK_SYMBOL
   end
 
@@ -12,7 +12,7 @@ class Bishop < Piece
     generate_diagonal_moves
   end
 
-  def adjacent_moves
+  def adjacent_moves(board)
     moves[0, 4]
   end
 end

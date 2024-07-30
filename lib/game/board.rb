@@ -82,9 +82,10 @@ class Board
 
   def move(origin, destination)
     @king_taken = true if piece(destination).instance_of?(King)
-    set_piece(piece(origin), destination)
+    moving_piece = piece(origin)
+    set_piece(moving_piece, destination)
     set_piece(default_symbol, origin)
-    piece(destination).update_position(destination)
+    moving_piece.update_position(destination)
   end
 
   def set_piece(value, coordinates)

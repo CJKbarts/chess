@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 
 class Piece
-  attr_reader :symbol, :moves, :position, :num
+  attr_reader :symbol, :moves, :position, :num, :has_moved
 
   def initialize(num, position)
     @num = num
     @position = position
-    @symbol = assign_symbol(num)
+    @symbol = assign_symbol
     @moves = generate_moves
+    @has_moved = false
   end
 
   def update_position(new_position)
     @position = new_position
+    @has_moved = true
   end
 
   def valid_move?(coordinates)
@@ -48,19 +50,22 @@ class Piece
   end
 
   def can_move?(board)
-    adjacent_moves.any? do |move|
+    adjacent_moves(board).any? do |move|
       coordinates = [position[0] + move[0], position[1] + move[1]]
       board.empty?(coordinates) || opp_piece?(board.piece(coordinates))
     end
   end
 
   def opp_piece?(piece)
-    return false if piece.nil?
+    return false if piece.nil? || piece == ' '
 
     num != piece.num
   end
 
   def to_s
     symbol
+  end
+
+  def special_move(destination, board)
   end
 end

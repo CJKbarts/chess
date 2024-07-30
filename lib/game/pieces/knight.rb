@@ -4,7 +4,7 @@ class Knight < Piece
   WHITE_SYMBOL = "\u2658"
   BLACK_SYMBOL = "\u265E"
 
-  def assign_symbol(num)
+  def assign_symbol
     num == 1 ? WHITE_SYMBOL : BLACK_SYMBOL
   end
 
@@ -23,7 +23,7 @@ class Knight < Piece
     move_array
   end
 
-  def adjacent_moves
+  def adjacent_moves(board)
     moves
   end
 end

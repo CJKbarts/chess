@@ -14,11 +14,13 @@ class Game
 
   def play_round
     current_player = nil
+    current_player = player1
     until game_over?
       board.display
-      current_player = choose_player(current_player)
+      # current_player = choose_player(current_player)
       make_move(current_player)
     end
+    results(current_player)
     board.display
   end
 
@@ -39,6 +41,12 @@ class Game
       destination = player.input('Invalid destination. Choose a different cell: ')
     end
 
-    board.move(origin, destination)
+    board.piece(origin).special_move(destination, board) || board.move(origin, destination)
+  end
+
+  def results(winner)
+    <<~RESULTS
+      #{winner} won the game!!
+    RESULTS
   end
 end
