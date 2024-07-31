@@ -4,17 +4,23 @@ require_relative '../lib/game/display'
 require_relative '../lib/game/board'
 
 describe Pawn do
-  describe 'moves' do
-    subject(:pawn_generate) { described_class.new(1, [1, 0]) }
+  describe '#generate_moves' do
+    subject(:pawn_generate) { described_class.new(1, [1, 1], board) }
+    let(:board) { instance_double('Board') }
 
     context 'when the pawn has not been moved yet' do
+      before do
+        allow(board).to receive(:piece)
+      end
+
       it 'can move two rows up or one row up' do
-        expect(pawn_generate.moves).to eql([[1, 0], [2, 0]])
+        expect(pawn_generate.generate_moves).to eql([[1, 0], [2, 0]])
       end
     end
 
     context 'when the pawn has been moved' do
       before do
+        allow(board).to receive(:piece)
         pawn_generate.update_position([2, 0])
       end
 
@@ -22,21 +28,15 @@ describe Pawn do
         expect(pawn_generate.moves).to eql([[1, 0]])
       end
     end
-  end
 
-  describe '#adjacent_moves' do
-    subject(:pawn_adjacent) { described_class.new(1, [1, 1]) }
-    let(:board) { instance_double('Board') }
-
-    context "when there's an opposing piece one square diagonally forward" do
+    context 'when an opp piece is one square diagonally foward' do
       before do
-        test_grid = Array.new(3) { Array.new(3, ' ') }
-        allow(board).to receive(:grid).and_return(test_grid)
-        allow(board).to receive(:piece).and_return(' ', Pawn.new(2, [2, 2]))
+        opp_pawn = instance_double('Pawn', num: 2)
+        allow(board).to receive(:piece).and_return(nil, opp_pawn)
       end
 
-      it 'can take the piece' do
-        expect(pawn_adjacent.adjacent_moves(board)).to eql([[1, 0], [1, 1]])
+      it 'can take the opp piece' do
+        expect(pawn_generate.moves).to eql([[1, 0], [1, 1], [2, 0]])
       end
     end
   end

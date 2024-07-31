@@ -2,7 +2,7 @@ require_relative '../lib/game/piece'
 require_relative '../lib/game/pieces/knight'
 
 describe Knight do
-  describe '#generate_moves' do
+  describe '#generate_moves(board)' do
     subject(:knight_generate) { described_class.new(1, [4, 4]) }
 
     it 'can move 2 up and 1 to the right' do

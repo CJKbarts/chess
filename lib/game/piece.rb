@@ -50,8 +50,8 @@ class Piece
   end
 
   def can_move?(board)
-    adjacent_moves(board).any? do |move|
-      coordinates = [position[0] + move[0], position[1] + move[1]]
+    adjacent_moves.any? do |move|
+      coordinates = move_to_coordinate(move)
       board.empty?(coordinates) || opp_piece?(board.piece(coordinates))
     end
   end
@@ -66,6 +66,10 @@ class Piece
     symbol
   end
 
-  def special_move(destination, board)
+  def move_to_coordinate(move)
+    [position[0] + move[0], position[1] + move[1]]
+  end
+
+  def special_move(destination)
   end
 end

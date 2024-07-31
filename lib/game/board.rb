@@ -95,8 +95,8 @@ class Board
   private
 
   def populate_grid
-    grid[1].fill { |column_index| Pawn.new(1, [1, column_index]) }
-    grid[6].fill { |column_index| Pawn.new(2, [6, column_index]) }
+    grid[1].fill { |column_index| Pawn.new(1, [1, column_index], self) }
+    grid[6].fill { |column_index| Pawn.new(2, [6, column_index], self) }
     populate_row(0, 1)
     populate_row(7, 2)
   end
@@ -110,7 +110,7 @@ class Board
     row[2] = Bishop.new(color_num, [row_num, 2])
     row[-3] = Bishop.new(color_num, [row_num, 5])
     row[3] = Queen.new(color_num, [row_num, 3])
-    row[4] = King.new(color_num, [row_num, 4])
+    row[4] = King.new(color_num, [row_num, 4], self)
   end
 
   def create_grid

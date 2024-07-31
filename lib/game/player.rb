@@ -16,6 +16,8 @@ class Player
   end
 
   def verify_input(choice)
+    return false unless choice.length == 2
+
     choice[0].match?(/[a-h]/) && choice[1].match?(/[1-8]/)
   end
 

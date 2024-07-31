@@ -5,7 +5,12 @@ require_relative '../lib/game/pieces/rook'
 
 describe Piece do
   describe '#valid_move?' do
-    subject(:pawn_valid) { Pawn.new(1, [1, 0]) }
+    subject(:pawn_valid) { Pawn.new(1, [1, 0], board) }
+    let(:board) { instance_double('Board') }
+
+    before do
+      allow(board).to receive(:piece)
+    end
 
     context 'when an invalid move is given' do
       it 'returns false' do
@@ -49,7 +54,7 @@ describe Piece do
     end
   end
 
-  describe '#generate_moves' do
+  describe '#generate_moves(board)' do
     subject(:rook_generate) { Rook.new(1, [3, 4]) }
 
     it 'can move up a vertical line' do

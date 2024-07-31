@@ -23,7 +23,7 @@ class Knight < Piece
     move_array
   end
 
-  def adjacent_moves(board)
+  def adjacent_moves
     moves
   end
 end

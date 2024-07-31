@@ -3,10 +3,11 @@
 class Pawn < Piece
   WHITE_SYMBOL = "\u2659"
   BLACK_SYMBOL = "\u265F"
-  attr_reader :row_increment
+  attr_reader :row_increment, :board
 
-  def initialize(num, position)
+  def initialize(num, position, board)
     @row_increment = num == 1 ? 1 : -1
+    @board = board
     super(num, position)
   end
 
@@ -14,32 +15,32 @@ class Pawn < Piece
     num == 1 ? WHITE_SYMBOL : BLACK_SYMBOL
   end
 
+  def valid_move?(coordinates)
+    @moves = generate_moves
+    super(coordinates)
+  end
+
   def generate_moves
     array = [[row_increment, 0]]
+    take_moves = [[row_increment, -1], [row_increment, 1]]
+    take_moves.each do |move|
+      coordinates = move_to_coordinate(move)
+      array << move if opp_piece?(board.piece(coordinates))
+    end
     array << [row_increment * 2, 0] unless has_moved
     array
   end
 
-  def update_position(new_position)
+  def update_position(position)
     super
-    moves.delete([row_increment * 2, 0])
+    @moves = generate_moves
   end
 
-  def adjacent_moves(board)
-    array = [moves[0]]
-    [-1, 1].each do |column_increment|
-      coordinates = [row_increment, column_increment]
-      array << coordinates if opp_piece?(board.piece([position[0] + coordinates[0], position[1] + coordinates[1]]))
-    end
-    update_moves(array)
-    array
+  def adjacent_moves
+    moves.reject { |move| move == [row_increment * 2, 0] }
   end
 
-  def update_moves(array)
-    @moves = (generate_moves + array).uniq
-  end
-
-  def special_move(destination, board)
+  def special_move(destination)
     return unless destination[0] == 0 || destination[0] == 7
 
     board.set_piece(promotion(destination), destination)

@@ -12,7 +12,7 @@ class Rook < Piece
     generate_straight_moves
   end
 
-  def adjacent_moves(board)
+  def adjacent_moves
     moves[0, 4]
   end
 end
