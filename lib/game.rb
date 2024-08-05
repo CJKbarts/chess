@@ -7,7 +7,8 @@ class Game
     @player2 = Player.new(2)
   end
 
-  def setup_player_names
+  def setup
+    board.generate_grid
     player1.assign_name
     player2.assign_name
   end

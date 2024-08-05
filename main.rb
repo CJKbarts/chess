@@ -15,5 +15,5 @@ require 'rainbow'
 require 'pry-byebug'
 
 game = Game.new
-game.setup_player_names
+game.setup
 game.play_round

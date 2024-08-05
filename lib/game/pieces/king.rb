@@ -67,12 +67,12 @@ class King < Piece
   end
 
   def cell_checked?(position)
-    board.grid.each do |row|
-      row.each do |piece|
+    board.grid.any? do |row|
+      row.any? do |piece|
         next unless opp_piece?(piece)
-        return true if piece.valid_move?(position) && board.clear_path?(piece.position, position)
+
+        piece.valid_move?(position) && board.clear_path?(piece.position, position)
       end
     end
-    false
   end
 end

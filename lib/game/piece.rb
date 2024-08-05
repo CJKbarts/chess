@@ -70,6 +70,10 @@ class Piece
     [position[0] + move[0], position[1] + move[1]]
   end
 
+  def coordinates_to_move(destination, origin)
+    [destination[0] - origin[0], destination[1] - origin[1]]
+  end
+
   def special_move(destination)
   end
 end

@@ -6,8 +6,11 @@ class Board
 
   def initialize
     @default_symbol = ' '
-    @grid = create_grid
     @king_taken = false
+  end
+
+  def generate_grid
+    @grid = create_grid
     populate_grid
   end
 
@@ -86,10 +89,15 @@ class Board
     set_piece(moving_piece, destination)
     set_piece(default_symbol, origin)
     moving_piece.update_position(destination)
+    @previous_piece = moving_piece
   end
 
   def set_piece(value, coordinates)
     grid[coordinates[0]][coordinates[1]] = value
+  end
+
+  def previous_piece?(piece)
+    @previous_piece == piece
   end
 
   private
