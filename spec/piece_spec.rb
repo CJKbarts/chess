@@ -1,3 +1,5 @@
+require 'json'
+require_relative '../lib/serializable'
 require_relative '../lib/game/piece'
 require_relative '../lib/game/pieces/pawn'
 require_relative '../lib/game/pieces/bishop'
@@ -5,7 +7,7 @@ require_relative '../lib/game/pieces/rook'
 
 describe Piece do
   describe '#valid_move?' do
-    subject(:pawn_valid) { Pawn.new(1, [1, 0], board) }
+    subject(:pawn_valid) { Pawn.new(1, [1, 0]) }
     let(:board) { instance_double('Board') }
 
     before do
@@ -15,19 +17,19 @@ describe Piece do
     context 'when an invalid move is given' do
       it 'returns false' do
         invalid_coordinate = [4, 0]
-        expect(pawn_valid.valid_move?(invalid_coordinate)).to eql(false)
+        expect(pawn_valid.valid_move?(invalid_coordinate, board)).to eql(false)
       end
 
       it 'returns false' do
         invalid_coordinate = [4, 5]
-        expect(pawn_valid.valid_move?(invalid_coordinate)).to eql(false)
+        expect(pawn_valid.valid_move?(invalid_coordinate, board)).to eql(false)
       end
     end
 
     context 'when a valid move is given' do
       it 'returns true' do
         valid_coordinate = [2, 0]
-        expect(pawn_valid.valid_move?(valid_coordinate)).to eql(true)
+        expect(pawn_valid.valid_move?(valid_coordinate, board)).to eql(true)
       end
     end
   end

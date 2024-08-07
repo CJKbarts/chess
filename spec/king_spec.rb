@@ -1,3 +1,5 @@
+require 'json'
+require_relative '../lib/serializable'
 require_relative '../lib/game/piece'
 require_relative '../lib/game/display'
 require_relative '../lib/game/board'
@@ -7,9 +9,9 @@ require_relative '../lib/game/pieces/knight'
 
 describe King do
   describe '#cell_checked?' do
-    subject(:king_checked) { described_class.new(1, [1, 1], board) }
+    subject(:king_checked) { described_class.new(1, [1, 1]) }
     let(:board) { Board.new }
-    let(:pawn) { Pawn.new(2, [2, 0], board) }
+    let(:pawn) { Pawn.new(2, [2, 0]) }
 
     context 'when a cell is checked by a pawn' do
       before do
@@ -20,7 +22,7 @@ describe King do
       end
 
       it 'it returns true' do
-        expect(king_checked.cell_checked?([1, 1])).to eql(true)
+        expect(king_checked.cell_checked?([1, 1], board)).to eql(true)
       end
     end
   end

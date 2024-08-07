@@ -4,6 +4,11 @@ class Bishop < Piece
   WHITE_SYMBOL = "\u2657"
   BLACK_SYMBOL = "\u265D"
 
+  def initialize(num, position)
+    super
+    @type_num = 3
+  end
+
   def assign_symbol
     num == 1 ? WHITE_SYMBOL : BLACK_SYMBOL
   end

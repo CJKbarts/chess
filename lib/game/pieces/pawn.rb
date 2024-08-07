@@ -3,11 +3,11 @@
 class Pawn < Piece
   WHITE_SYMBOL = "\u2659"
   BLACK_SYMBOL = "\u265F"
-  attr_reader :row_increment, :board
+  attr_reader :row_increment
 
-  def initialize(num, position, board)
+  def initialize(num, position)
     @row_increment = num == 1 ? 1 : -1
-    @board = board
+    @type_num = 0
     super(num, position)
   end
 
@@ -28,14 +28,14 @@ class Pawn < Piece
     take_moves.any? { |move| can_take?(move) || can_take_en_passant?(move) }
   end
 
-  def can_take?(move)
+  def can_take?(move, board)
     return false unless [[row_increment, -1], [row_increment, 1]].include? move
 
     coordinates = move_to_coordinate(move)
     opp_piece?(board.piece(coordinates))
   end
 
-  def can_take_en_passant?(move)
+  def can_take_en_passant?(move, board)
     return false unless [[row_increment, -1], [row_increment, 1]].include? move
 
     coordinates = move_to_coordinate([0, move[1]])
@@ -44,15 +44,16 @@ class Pawn < Piece
       board.previous_piece?(adjacent_piece) && adjacent_piece.moved_twice?
   end
 
-  def can_move_twice?(move)
+  def can_move_twice?(move, board)
     return false unless move == [row_increment * 2, 0]
 
     !has_moved && board.empty?(move_to_coordinate(moves[0]))
   end
 
-  def valid_move?(coordinates)
+  def valid_move?(coordinates, board)
     move = coordinates_to_move(coordinates, position)
-    super(coordinates) || can_move_twice?(move) || can_take?(move) || can_take_en_passant?(move)
+    super(coordinates, board) || can_move_twice?(move, board) ||
+      can_take?(move, board) || can_take_en_passant?(move, board)
   end
 
   def update_position(new_position)
@@ -68,23 +69,23 @@ class Pawn < Piece
     moves
   end
 
-  def special_move(destination)
+  def special_move(destination, board)
     move = coordinates_to_move(destination, position)
     if destination[0] == 0 || destination[0] == 7
       promote(destination)
-    elsif can_take?(move) || can_move_twice?(move)
+    elsif can_take?(move, board) || can_move_twice?(move, board)
       board.move(position, destination)
-    elsif can_take_en_passant?(move)
-      take_en_passant(destination)
+    elsif can_take_en_passant?(move, board)
+      take_en_passant(destination, board)
     end
   end
 
-  def take_en_passant(destination)
+  def take_en_passant(destination, board)
     board.set_piece(board.default_symbol, [position[0], destination[1]])
     board.move(position, destination)
   end
 
-  def promote(destination)
+  def promote(destination, board)
     board.set_piece(promotion(destination), destination)
     board.set_piece(board.default_symbol, position)
   end

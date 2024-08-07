@@ -4,10 +4,8 @@ class King < Piece
   WHITE_SYMBOL = "\u2654"
   BLACK_SYMBOL = "\u265A"
 
-  attr_reader :board
-
-  def initialize(num, position, board)
-    @board = board
+  def initialize(num, position)
+    @type_num = 1
     super(num, position)
   end
 
@@ -39,8 +37,8 @@ class King < Piece
     moves[..-3]
   end
 
-  def special_move(destination)
-    return unless can_castle?(destination)
+  def special_move(destination, board)
+    return unless can_castle?(destination, board)
 
     board.move(position, destination)
     rook_initial_position = [position[0], destination[1] == 6 ? 7 : 0]
@@ -48,30 +46,30 @@ class King < Piece
     board.move(rook_initial_position, rook_final_position)
   end
 
-  def can_castle?(destination)
+  def can_castle?(destination, board)
     return false unless [[position[0], 6], [position[0], 2]].include?(destination)
 
     rook_column = destination[1] == 6 ? 7 : 0
     rook = board.piece([position[0], rook_column])
-    !has_moved && !rook.has_moved && clear_path?(destination)
+    !has_moved && !rook.has_moved && clear_path?(destination, board)
   end
 
-  def clear_path?(destination)
+  def clear_path?(destination, board)
     return false unless board.clear_path?(position, destination)
 
     column_multiplier = destination[1] <=> position[1]
     (1..2).none? do |increment|
       cell = [position[0], (position[1] + (increment * column_multiplier))]
-      cell_checked?(cell)
+      cell_checked?(cell, board)
     end
   end
 
-  def cell_checked?(position)
+  def cell_checked?(position, board)
     board.grid.any? do |row|
       row.any? do |piece|
         next unless opp_piece?(piece)
 
-        piece.valid_move?(position) && board.clear_path?(piece.position, position)
+        piece.valid_move?(position, board) && board.clear_path?(piece.position, position)
       end
     end
   end

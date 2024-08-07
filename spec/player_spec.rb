@@ -1,3 +1,5 @@
+require 'json'
+require_relative '../lib/serializable'
 require_relative '../lib/game/player'
 
 describe Player do

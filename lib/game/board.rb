@@ -2,6 +2,7 @@
 
 class Board
   include Display
+  include Serializable
   attr_reader :grid, :default_symbol, :king_taken
 
   def initialize
@@ -15,7 +16,7 @@ class Board
   end
 
   def valid_origin?(origin, player_num)
-    return false if origin == []
+    return true if origin == 'save'
 
     current_piece = piece(origin)
     !empty?(origin) && current_piece.num == player_num && current_piece.can_move?(self)
@@ -32,9 +33,9 @@ class Board
   end
 
   def valid_destination?(origin, destination, player_num)
-    return false if destination == []
+    return true if destination == 'save'
 
-    piece(origin).valid_move?(destination) && clear_path?(origin, destination) &&
+    piece(origin).valid_move?(destination, self) && clear_path?(origin, destination) &&
       (empty?(destination) || piece(destination).num != player_num)
   end
 
@@ -100,11 +101,39 @@ class Board
     @previous_piece == piece
   end
 
+  def serialize
+    @grid = serialize_grid
+    super
+  end
+
+  def serialize_grid
+    map_grid do |elm|
+      elm.is_a?(Piece) ? elm.serialize : elm
+    end
+  end
+
+  def unserialize(string)
+    super
+    @grid = unserialize_grid
+    self
+  end
+
+  def unserialize_grid
+    map_grid do |elm|
+      if elm == default_symbol
+        elm
+      else
+        generic_piece = Piece.new(1, [1, 1]).unserialize(elm)
+        generic_piece.specify
+      end
+    end
+  end
+
   private
 
   def populate_grid
-    grid[1].fill { |column_index| Pawn.new(1, [1, column_index], self) }
-    grid[6].fill { |column_index| Pawn.new(2, [6, column_index], self) }
+    grid[1].fill { |column_index| Pawn.new(1, [1, column_index]) }
+    grid[6].fill { |column_index| Pawn.new(2, [6, column_index]) }
     populate_row(0, 1)
     populate_row(7, 2)
   end
@@ -118,7 +147,7 @@ class Board
     row[2] = Bishop.new(color_num, [row_num, 2])
     row[-3] = Bishop.new(color_num, [row_num, 5])
     row[3] = Queen.new(color_num, [row_num, 3])
-    row[4] = King.new(color_num, [row_num, 4], self)
+    row[4] = King.new(color_num, [row_num, 4])
   end
 
   def create_grid
@@ -133,5 +162,9 @@ class Board
 
   def greater(x, y)
     x > y ? x : y
+  end
+
+  def map_grid(&block)
+    grid.map { |row| row.map(&block) }
   end
 end

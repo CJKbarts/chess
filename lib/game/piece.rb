@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Piece
-  attr_reader :symbol, :moves, :position, :num, :has_moved
+  include Serializable
+  attr_reader :symbol, :moves, :position, :num, :has_moved, :type_num
 
   def initialize(num, position)
     @num = num
@@ -11,12 +12,18 @@ class Piece
     @has_moved = false
   end
 
+  def assign_symbol
+  end
+
+  def generate_moves
+  end
+
   def update_position(new_position)
     @position = new_position
     @has_moved = true
   end
 
-  def valid_move?(coordinates)
+  def valid_move?(coordinates, board = nil)
     move = []
     move << coordinates[0] - position[0]
     move << coordinates[1] - position[1]
@@ -49,7 +56,7 @@ class Piece
     move_array
   end
 
-  def can_move?(board)
+  def can_move?(board = nil)
     adjacent_moves.any? do |move|
       coordinates = move_to_coordinate(move)
       board.empty?(coordinates) || opp_piece?(board.piece(coordinates))
@@ -74,6 +81,29 @@ class Piece
     [destination[0] - origin[0], destination[1] - origin[1]]
   end
 
-  def special_move(destination)
+  def special_move(destination, board)
+  end
+
+  def specify
+    piece = new_child
+    instance_variables.each { |var| piece.instance_variable_set(var, instance_variable_get(var)) }
+    piece
+  end
+
+  def new_child
+    case type_num
+    when 0
+      Pawn.new(num, position)
+    when 1
+      King.new(num, position)
+    when 2
+      Queen.new(num, position)
+    when 3
+      Bishop.new(num, position)
+    when 4
+      Knight.new(num, position)
+    when 5
+      Rook.new(num, position)
+    end
   end
 end

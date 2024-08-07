@@ -1,8 +1,10 @@
 class Player
+  include Serializable
   attr_reader :num
 
   def initialize(num)
     @num = num
+    @name = "Player #{num}"
   end
 
   def input(prompt)
@@ -12,13 +14,17 @@ class Player
       print 'Invalid cell. Pick again: '
       choice = gets.chomp
     end
-    coordinates(choice)
+    choice == 'save' ? choice : coordinates(choice)
   end
 
   def verify_input(choice)
-    return false unless choice.length == 2
-
-    choice[0].match?(/[a-h]/) && choice[1].match?(/[1-8]/)
+    if choice == 'save'
+      true
+    elsif choice.length != 2
+      false
+    else
+      choice[0].match?(/[a-h]/) && choice[1].match?(/[1-8]/)
+    end
   end
 
   def coordinates(string)

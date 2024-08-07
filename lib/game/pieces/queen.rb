@@ -4,6 +4,11 @@ class Queen < Piece
   WHITE_SYMBOL = "\u2655"
   BLACK_SYMBOL = "\u265B"
 
+  def initialize(num, position)
+    super
+    @type_num = 2
+  end
+
   def assign_symbol
     num == 1 ? WHITE_SYMBOL : BLACK_SYMBOL
   end
