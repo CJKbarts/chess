@@ -40,6 +40,10 @@ class Piece
     piece
   end
 
+  def move_to_coordinate(move)
+    [position[0] + move[0], position[1] + move[1]]
+  end
+
   private
 
   def assign_symbol
@@ -82,10 +86,6 @@ class Piece
 
   def to_s
     symbol
-  end
-
-  def move_to_coordinate(move)
-    [position[0] + move[0], position[1] + move[1]]
   end
 
   def coordinates_to_move(destination, origin)

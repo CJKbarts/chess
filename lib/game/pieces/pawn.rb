@@ -20,12 +20,12 @@ class Pawn < Piece
   end
 
   def can_move?(board)
-    super(board) || take_possible?
+    super(board) || take_possible?(board)
   end
 
-  def take_possible?
+  def take_possible?(board)
     take_moves = [[row_increment, -1], [row_increment, 1]]
-    take_moves.any? { |move| can_take?(move) || can_take_en_passant?(move) }
+    take_moves.any? { |move| can_take?(move, board) || can_take_en_passant?(move, board) }
   end
 
   def can_take?(move, board)
@@ -72,7 +72,7 @@ class Pawn < Piece
   def special_move(destination, board)
     move = coordinates_to_move(destination, position)
     if destination[0] == 0 || destination[0] == 7
-      promote(destination)
+      promote(destination, board)
     elsif can_take?(move, board) || can_move_twice?(move, board)
       board.move(position, destination)
     elsif can_take_en_passant?(move, board)

@@ -3,7 +3,7 @@
 module Display
   def display
     puts
-    color = :white
+    color = 'E3C16F'
     @grid.reverse.each_with_index do |row, row_index|
       print "#{8 - row_index} "
       print_row(color, row)
@@ -28,6 +28,6 @@ module Display
   end
 
   def switch_color(color)
-    color == :white ? :black : :white
+    color == 'E3C16F' ? 'B88B4A' : 'E3C16F'
   end
 end

@@ -17,8 +17,8 @@ class Board
 
   def valid_origin?(origin, player_num)
     return true if origin == 'save'
+    return false if (current_piece = piece(origin)).nil?
 
-    current_piece = piece(origin)
     !empty?(origin) && current_piece.num == player_num && current_piece.can_move?(self)
   end
 
@@ -34,6 +34,7 @@ class Board
 
   def valid_destination?(origin, destination, player_num)
     return true if destination == 'save'
+    return false if piece(destination).nil?
 
     piece(origin).valid_move?(destination, self) && clear_path?(origin, destination) &&
       (empty?(destination) || piece(destination).num != player_num)

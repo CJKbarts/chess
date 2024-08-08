@@ -4,9 +4,6 @@ class Game
 
   def initialize
     @board = Board.new
-    @player1 = Player.new(1)
-    @player2 = Player.new(2)
-    @current_player = player1
   end
 
   def setup
@@ -29,7 +26,7 @@ class Game
       switch_player
     end
     board.display
-    results(current_player)
+    results
   end
 
   private
@@ -37,8 +34,9 @@ class Game
   def new_game
     puts
     board.generate_grid
-    player1.assign_name
-    player2.assign_name
+    @player1 = Player.new(1).setup
+    @player2 = Player.new(2).setup
+    @current_player = player1
   end
 
   def load_game
@@ -66,7 +64,7 @@ class Game
     @board = Board.new.unserialize(obj['@board'])
     @player1 = Player.new(1).unserialize(obj['@player1'])
     @player2 = Player.new(2).unserialize(obj['@player2'])
-    @current_player = Player.new(1).unserialize(obj['@current_player'])
+    @current_player = Player.new(1).unserialize(obj['@current_player']).num == 1 ? player1 : player2
     self
   end
 
@@ -87,40 +85,26 @@ class Game
   def game_over?
     if board.king_taken
       switch_player
-      true
+      return true
     end
     false
   end
 
   def make_move(player)
-    origin = pick_origin(player)
-    destination = pick_destination(player, origin)
-    board.piece(origin).special_move(destination, board) || board.move(origin, destination)
-  end
-
-  def pick_origin(player)
-    origin = player.input("#{player} please pick a valid piece to move: ")
-    origin = player.input('Invalid piece. Please pick again: ') until board.valid_origin?(origin, player.num)
+    origin = player.origin(board)
     save if origin == 'save'
-    origin
-  end
-
-  def pick_destination(player, origin)
-    destination = player.input("#{player} please pick a valid spot to move to: ")
-    until board.valid_destination?(origin, destination, player.num)
-      destination = player.input('Invalid spot. Pick again: ')
-    end
+    destination = player.destination(board, origin)
     save if destination == 'save'
-    destination
+    board.piece(origin).special_move(destination, board) || board.move(origin, destination)
   end
 
   def switch_player
     @current_player = @current_player == player1 ? player2 : player1
   end
 
-  def results(winner)
-    <<~RESULTS
-      #{winner} won the game!!
+  def results
+    puts <<~RESULTS
+      #{current_player} won the game!!
     RESULTS
   end
 end
