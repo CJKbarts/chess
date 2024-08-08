@@ -106,30 +106,19 @@ class Board
     super
   end
 
-  def serialize_grid
-    map_grid do |elm|
-      elm.is_a?(Piece) ? elm.serialize : elm
-    end
-  end
-
   def unserialize(string)
     super
     @grid = unserialize_grid
     self
   end
 
-  def unserialize_grid
-    map_grid do |elm|
-      if elm == default_symbol
-        elm
-      else
-        generic_piece = Piece.new(1, [1, 1]).unserialize(elm)
-        generic_piece.specify
-      end
+  private
+
+  def create_grid
+    Array.new(8) do
+      Array.new(8) { default_symbol }
     end
   end
-
-  private
 
   def populate_grid
     grid[1].fill { |column_index| Pawn.new(1, [1, column_index]) }
@@ -150,9 +139,24 @@ class Board
     row[4] = King.new(color_num, [row_num, 4])
   end
 
-  def create_grid
-    Array.new(8) do
-      Array.new(8) { default_symbol }
+  def serialize_grid
+    map_grid do |elm|
+      elm.is_a?(Piece) ? elm.serialize : elm
+    end
+  end
+
+  def map_grid(&block)
+    grid.map { |row| row.map(&block) }
+  end
+
+  def unserialize_grid
+    map_grid do |elm|
+      if elm == default_symbol
+        elm
+      else
+        generic_piece = Piece.new(1, [1, 1]).unserialize(elm)
+        generic_piece.specify
+      end
     end
   end
 
@@ -162,9 +166,5 @@ class Board
 
   def greater(x, y)
     x > y ? x : y
-  end
-
-  def map_grid(&block)
-    grid.map { |row| row.map(&block) }
   end
 end

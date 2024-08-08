@@ -12,15 +12,14 @@ class Piece
     @has_moved = false
   end
 
-  def assign_symbol
+  def can_move?(board = nil)
+    adjacent_moves.any? do |move|
+      coordinates = move_to_coordinate(move)
+      board.empty?(coordinates) || opp_piece?(board.piece(coordinates))
+    end
   end
 
-  def generate_moves
-  end
-
-  def update_position(new_position)
-    @position = new_position
-    @has_moved = true
+  def special_move(destination, board)
   end
 
   def valid_move?(coordinates, board = nil)
@@ -28,6 +27,25 @@ class Piece
     move << coordinates[0] - position[0]
     move << coordinates[1] - position[1]
     moves.include?(move)
+  end
+
+  def update_position(new_position)
+    @position = new_position
+    @has_moved = true
+  end
+
+  def specify
+    piece = new_child
+    instance_variables.each { |var| piece.instance_variable_set(var, instance_variable_get(var)) }
+    piece
+  end
+
+  private
+
+  def assign_symbol
+  end
+
+  def generate_moves
   end
 
   def generate_diagonal_moves
@@ -56,13 +74,6 @@ class Piece
     move_array
   end
 
-  def can_move?(board = nil)
-    adjacent_moves.any? do |move|
-      coordinates = move_to_coordinate(move)
-      board.empty?(coordinates) || opp_piece?(board.piece(coordinates))
-    end
-  end
-
   def opp_piece?(piece)
     return false if piece.nil? || piece == ' '
 
@@ -79,15 +90,6 @@ class Piece
 
   def coordinates_to_move(destination, origin)
     [destination[0] - origin[0], destination[1] - origin[1]]
-  end
-
-  def special_move(destination, board)
-  end
-
-  def specify
-    piece = new_child
-    instance_variables.each { |var| piece.instance_variable_set(var, instance_variable_get(var)) }
-    piece
   end
 
   def new_child
