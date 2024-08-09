@@ -94,4 +94,20 @@ class Player
     end
     computer_player
   end
+
+  def choose_promotion
+    promotion_prompt
+    gets.chomp
+  end
+
+  def promotion_prompt
+    print <<~PROMPT
+
+      Choose a piece to upgrade to
+      [1] Queen
+      [2] Knight
+      [3] Bishop
+      [4] Rook
+    PROMPT
+  end
 end

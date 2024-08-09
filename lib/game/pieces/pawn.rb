@@ -76,10 +76,10 @@ class Pawn < Piece
     moves
   end
 
-  def special_move(destination, board)
+  def special_move(destination, board, player)
     move = coordinates_to_move(destination, position)
     if destination[0] == 0 || destination[0] == 7
-      promote(destination, board)
+      promote(destination, board, player)
     elsif can_take?(move, board) || can_move_twice?(move, board)
       board.move(position, destination)
     elsif can_take_en_passant?(move, board)
@@ -92,14 +92,13 @@ class Pawn < Piece
     board.move(position, destination)
   end
 
-  def promote(destination, board)
-    board.set_piece(promotion(destination), destination)
+  def promote(destination, board, player)
+    board.set_piece(promotion(destination, player), destination)
     board.set_piece(board.default_symbol, position)
   end
 
-  def promotion(destination)
-    promotion_prompt
-    case gets.chomp
+  def promotion(destination, player)
+    case player.choose_promotion
     when '1'
       Queen.new(num, destination)
     when '2'
@@ -109,16 +108,5 @@ class Pawn < Piece
     when '4'
       Rook.new(num, destination)
     end
-  end
-
-  def promotion_prompt
-    print <<~PROMPT
-
-      Choose a piece to upgrade to
-      [1] Queen
-      [2] Knight
-      [3] Bishop
-      [4] Rook
-    PROMPT
   end
 end

@@ -32,4 +32,8 @@ class ComputerPlayer < Player
     end
     possible_moves.sample
   end
+
+  def choose_promotion
+    (1..4).to_a.sample.to_s
+  end
 end

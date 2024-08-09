@@ -95,7 +95,7 @@ class Game
     save if origin == 'save'
     destination = player.destination(board, origin)
     save if destination == 'save'
-    board.piece(origin).special_move(destination, board) || board.move(origin, destination)
+    board.piece(origin).special_move(destination, board, player) || board.move(origin, destination)
   end
 
   def switch_player
