@@ -25,6 +25,7 @@ class ComputerPlayer < Player
   end
 
   def choose_move(piece, board, origin)
+    piece.update_moves(board) if piece.instance_of?(Pawn)
     possible_moves = piece.moves.filter do |move|
       destination = piece.move_to_coordinate(move)
       board.valid_destination?(origin, destination, num)

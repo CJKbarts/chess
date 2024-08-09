@@ -7,7 +7,7 @@ require_relative '../lib/game/pieces/rook'
 
 describe Piece do
   describe '#valid_move?' do
-    subject(:pawn_valid) { Pawn.new(1, [1, 0]) }
+    subject(:rook_valid) { Rook.new(1, [1, 0]) }
     let(:board) { instance_double('Board') }
 
     before do
@@ -16,20 +16,20 @@ describe Piece do
 
     context 'when an invalid move is given' do
       it 'returns false' do
-        invalid_coordinate = [4, 0]
-        expect(pawn_valid.valid_move?(invalid_coordinate, board)).to eql(false)
+        invalid_coordinate = [4, 4]
+        expect(rook_valid.valid_move?(invalid_coordinate, board)).to eql(false)
       end
 
       it 'returns false' do
-        invalid_coordinate = [4, 5]
-        expect(pawn_valid.valid_move?(invalid_coordinate, board)).to eql(false)
+        invalid_coordinate = [2, 1]
+        expect(rook_valid.valid_move?(invalid_coordinate, board)).to eql(false)
       end
     end
 
     context 'when a valid move is given' do
       it 'returns true' do
         valid_coordinate = [2, 0]
-        expect(pawn_valid.valid_move?(valid_coordinate, board)).to eql(true)
+        expect(rook_valid.valid_move?(valid_coordinate, board)).to eql(true)
       end
     end
   end

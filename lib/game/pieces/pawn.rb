@@ -19,8 +19,16 @@ class Pawn < Piece
     [[row_increment, 0]]
   end
 
+  def update_moves(board)
+    array = [[row_increment, -1], [row_increment, 1], [row_increment * 2, 0]]
+    @moves = array.filter do |move|
+      can_take?(move, board) || can_take_en_passant?(move, board) || can_move_twice?(move, board)
+    end
+    @moves << [row_increment, 0] if board.empty?(move_to_coordinate([row_increment, 0]))
+  end
+
   def can_move?(board)
-    super(board) || take_possible?(board)
+    board.empty?(move_to_coordinate([row_increment, 0])) || take_possible?(board)
   end
 
   def take_possible?(board)
@@ -47,13 +55,12 @@ class Pawn < Piece
   def can_move_twice?(move, board)
     return false unless move == [row_increment * 2, 0]
 
-    !has_moved && board.empty?(move_to_coordinate(moves[0]))
+    !has_moved && board.empty?(move_to_coordinate([row_increment, 0]))
   end
 
   def valid_move?(coordinates, board)
-    move = coordinates_to_move(coordinates, position)
-    super(coordinates, board) || can_move_twice?(move, board) ||
-      can_take?(move, board) || can_take_en_passant?(move, board)
+    update_moves(board)
+    super(coordinates, board)
   end
 
   def update_position(new_position)
