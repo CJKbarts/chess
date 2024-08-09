@@ -24,7 +24,7 @@ class King < Piece
       end
     end
 
-    move_array + [[0, 2], [0, -2]]
+    move_array
   end
 
   def update_position(new_position)
@@ -34,10 +34,22 @@ class King < Piece
   end
 
   def adjacent_moves
-    moves[..-3]
+    moves[0, 8]
   end
 
-  def special_move(destination, board)
+  def update_moves(board)
+    @moves = moves[0, 8]
+    [[position[0], 2], [position[0], 6]].each do |coordinate|
+      moves << coordinate if can_castle?(coordinate, board)
+    end
+  end
+
+  def valid_move?(coordinates, board)
+    update_moves(board)
+    super(coordinates)
+  end
+
+  def special_move(destination, board, player)
     return unless can_castle?(destination, board)
 
     board.move(position, destination)
@@ -51,10 +63,16 @@ class King < Piece
 
     rook_column = destination[1] == 6 ? 7 : 0
     rook = board.piece([position[0], rook_column])
-    !has_moved && !rook.has_moved && clear_path?(destination, board)
+    return false unless rook.instance_of?(Rook)
+
+    !has_moved && !rook.has_moved && paths_clear?(rook, destination, board)
   end
 
-  def clear_path?(destination, board)
+  def paths_clear?(rook, king_destination, board)
+    king_path_clear?(king_destination, board) && rook_path_clear?(rook, board)
+  end
+
+  def king_path_clear?(destination, board)
     return false unless board.clear_path?(position, destination)
 
     column_multiplier = destination[1] <=> position[1]
@@ -62,6 +80,11 @@ class King < Piece
       cell = [position[0], (position[1] + (increment * column_multiplier))]
       cell_checked?(cell, board)
     end
+  end
+
+  def rook_path_clear?(rook, board)
+    destination = [rook.position[0], (rook.position[1] == 7 ? 5 : 3)]
+    board.clear_path?(rook.position, destination)
   end
 
   def cell_checked?(position, board)

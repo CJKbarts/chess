@@ -19,7 +19,7 @@ class Piece
     end
   end
 
-  def special_move(destination, board)
+  def special_move(destination, board, player)
   end
 
   def valid_move?(coordinates, board = nil)
@@ -42,6 +42,9 @@ class Piece
 
   def move_to_coordinate(move)
     [position[0] + move[0], position[1] + move[1]]
+  end
+
+  def update_moves(board)
   end
 
   private
