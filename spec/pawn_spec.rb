@@ -1,5 +1,7 @@
 require 'json'
 require_relative '../lib/serializable'
+require_relative '../lib/game/board/grid'
+require_relative '../lib/game/board/path'
 require_relative '../lib/game/piece'
 require_relative '../lib/game/pieces/pawn'
 require_relative '../lib/game/pieces/king'
