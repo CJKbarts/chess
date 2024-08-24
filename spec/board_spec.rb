@@ -24,7 +24,7 @@ describe Board do
         allow(board_horizontal).to receive(:grid).and_return(test_grid)
       end
       it 'returns true' do
-        expect(board_horizontal.horizontal_clear?([0, 2], [0, 6])).to eql(true)
+        expect(board_horizontal.horizontal_clear?([0, 2], [0, 6], nil)).to eql(true)
       end
     end
 
@@ -37,7 +37,21 @@ describe Board do
         allow(board_horizontal).to receive(:grid).and_return(test_grid)
       end
       it 'returns false' do
-        expect(board_horizontal.horizontal_clear?([0, 2], [0, 6])).to eql(false)
+        expect(board_horizontal.horizontal_clear?([0, 2], [0, 6], nil)).to eql(false)
+      end
+    end
+
+    context 'when a piece to be skipped is in the path' do
+      let(:pawn_skip) { instance_double('Pawn') }
+      before do
+        test_grid = [Array.new(8, board_horizontal.default_symbol)]
+        test_grid[0][2] = instance_double('Queen')
+        test_grid[0][4] = pawn_skip
+        test_grid[0][6] = instance_double('Pawn')
+        allow(board_horizontal).to receive(:grid).and_return(test_grid)
+      end
+      it 'returns true' do
+        expect(board_horizontal.horizontal_clear?([0, 2], [0, 6], pawn_skip)).to eql(true)
       end
     end
   end
@@ -53,7 +67,7 @@ describe Board do
         allow(board_vertical).to receive(:grid).and_return(test_grid)
       end
       it 'returns true' do
-        expect(board_vertical.vertical_clear?([1, 1], [5, 1])).to eql(true)
+        expect(board_vertical.vertical_clear?([1, 1], [5, 1], nil)).to eql(true)
       end
     end
 
@@ -66,7 +80,22 @@ describe Board do
         allow(board_vertical).to receive(:grid).and_return(test_grid)
       end
       it 'returns false' do
-        expect(board_vertical.vertical_clear?([1, 1], [5, 1])).to eql(false)
+        expect(board_vertical.vertical_clear?([1, 1], [5, 1], nil)).to eql(false)
+      end
+    end
+
+    context 'when a piece to be skipped is in the path' do
+      let(:pawn_skip) { instance_double('Pawn') }
+
+      before do
+        test_grid = Array.new(8) { Array.new(3, board_vertical.default_symbol) }
+        test_grid[1][1] = instance_double('Queen')
+        test_grid[4][1] = pawn_skip
+        test_grid[5][1] = instance_double('Pawn')
+        allow(board_vertical).to receive(:grid).and_return(test_grid)
+      end
+      it 'returns true' do
+        expect(board_vertical.vertical_clear?([1, 1], [5, 1], pawn_skip)).to eql(true)
       end
     end
   end

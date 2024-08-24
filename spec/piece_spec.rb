@@ -36,43 +36,49 @@ describe Piece do
 
   describe '#generate_diagonal_moves' do
     subject(:bishop_diagonal) { Bishop.new(1, [3, 3]) }
+    let(:board) { instance_double('Board') }
 
     it 'can move up an increasing diagonal' do
       valid_move = [6, 6]
-      expect(bishop_diagonal.valid_move?(valid_move)).to eql(true)
+      expect(bishop_diagonal.valid_move?(valid_move, board)).to eql(true)
     end
 
     it 'can move down an increasing diagonal' do
       valid_move = [0, 0]
-      expect(bishop_diagonal.valid_move?(valid_move)).to eql(true)
+      expect(bishop_diagonal.valid_move?(valid_move, board)).to eql(true)
     end
     it 'can move up a decreasing diagonal' do
       valid_move = [6, 0]
-      expect(bishop_diagonal.valid_move?(valid_move)).to eql(true)
+      expect(bishop_diagonal.valid_move?(valid_move, board)).to eql(true)
     end
     it 'can move down a decreasing diagonal' do
       valid_move = [0, 6]
-      expect(bishop_diagonal.valid_move?(valid_move)).to eql(true)
+      expect(bishop_diagonal.valid_move?(valid_move, board)).to eql(true)
     end
   end
 
   describe '#generate_moves(board)' do
     subject(:rook_generate) { Rook.new(1, [3, 4]) }
+    let(:board) { instance_double('Board') }
 
     it 'can move up a vertical line' do
-      expect(rook_generate.valid_move?([5, 4])).to eql(true)
+      valid_move = [5, 4]
+      expect(rook_generate.valid_move?(valid_move, board)).to eql(true)
     end
 
     it 'can move down a vertical line' do
-      expect(rook_generate.valid_move?([0, 4])).to eql(true)
+      valid_move = [0, 4]
+      expect(rook_generate.valid_move?(valid_move, board)).to eql(true)
     end
 
     it 'can move right on a horizontal line' do
-      expect(rook_generate.valid_move?([3, 5])).to eql(true)
+      valid_move = [3, 5]
+      expect(rook_generate.valid_move?(valid_move, board)).to eql(true)
     end
 
     it 'can move left on a horizontal line' do
-      expect(rook_generate.valid_move?([3, 1])).to eql(true)
+      valid_move = [3, 1]
+      expect(rook_generate.valid_move?(valid_move, board)).to eql(true)
     end
   end
 end
